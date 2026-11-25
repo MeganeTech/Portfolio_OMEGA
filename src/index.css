@@ -1,0 +1,103 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap");
+@import "tailwindcss";
+
+@property --angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@theme {
+  --font-sans: "Space Grotesk", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background-color: #060a13;
+  color: #cbd5e1;
+  font-family: var(--font-sans);
+}
+
+/* Fond : halos + grille */
+.bg-tech {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  background:
+    radial-gradient(60rem 40rem at 10% -10%, rgba(16, 185, 129, 0.18), transparent 60%),
+    radial-gradient(50rem 40rem at 100% 10%, rgba(6, 182, 212, 0.16), transparent 60%),
+    radial-gradient(50rem 40rem at 50% 110%, rgba(139, 92, 246, 0.16), transparent 60%),
+    #060a13;
+}
+.bg-tech::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(148, 163, 184, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(148, 163, 184, 0.07) 1px, transparent 1px);
+  background-size: 44px 44px;
+  mask-image: radial-gradient(ellipse at center, black 30%, transparent 75%);
+}
+.orb {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(80px);
+  opacity: 0.35;
+  animation: float 3s ease-in-out 1 forwards;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(30px, -40px); }
+}
+
+/* Bordure dégradée animée */
+.glow-card {
+  border-radius: 1rem;
+  padding: 1px;
+  background: conic-gradient(
+    from var(--angle),
+    rgba(148, 163, 184, 0.15) 0%,
+    #10b981 15%,
+    #06b6d4 30%,
+    #8b5cf6 45%,
+    rgba(148, 163, 184, 0.15) 60%
+  );
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.glow-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 40px -10px rgba(6, 182, 212, 0.45);
+}
+.glow-card > .inner {
+  border-radius: calc(1rem - 1px);
+  background: rgba(8, 13, 26, 0.94);
+}
+@keyframes spin { to { --angle: 360deg; } }
+
+/* La bordure fait un tour de 3 secondes quand le bloc apparaît, puis s'arrête */
+.reveal.visible .glow-card { animation: spin 3s linear 1 forwards; }
+
+/* Texte dégradé */
+.text-gradient {
+  background: linear-gradient(90deg, #34d399, #22d3ee, #a78bfa);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Apparition au défilement */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal.visible { opacity: 1; transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal.visible .glow-card, .orb { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
